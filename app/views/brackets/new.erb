@@ -1,1 +1,28 @@
-new bracket
+<div class="team_form_dropdown hide"></div>
+<div class="container">
+  <div class="form_box_md_container">
+    <form action="/brackets" method="post">
+      <div class="col_header" style="margin: 0">
+        <div class="col_tab">
+          New Bracket
+        </div>
+      </div>
+      <div class="form_box_md tabbed" style="margin-top: 0">
+        <p>TITLE</p>
+        <input type="text" name="bracket[title]" class="form_box_md_input_text">
+      </div>
+      <div class="team_form_box" style="margin-top: 0" id="team1">
+        <p>TEAM 1</p>
+        <input type="text" name="bracket[team][]" class="form_box_md_input_text" id="team_1_input">
+      </div>
+      <div class="team_form_box" style="margin-top: 0" id="team2">
+        <p>TEAM 2</p>
+        <input type="text" name="bracket[team][]" class="form_box_md_input_text">
+      </div>
+      <div class="button_md_gray" style="margin-top: 7px" id="add_team_btn">
+        Add Team
+      </div>
+      <input type="submit" class="button_md_yellow" value="Create">
+    </form>
+  </div>
+</div>
