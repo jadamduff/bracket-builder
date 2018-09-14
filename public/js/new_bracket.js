@@ -4,16 +4,42 @@ $(document).ready(function() {
 
   var setDropdown = function() {
     $('input.form_box_md_input_text').focus(function() {
-      var position = $(this).offset();
-      var top = position.top + 40;
-      var left = position.left;
-      var width = $(this).outerWidth();
-      $('.team_form_dropdown').css({top: top, left: left, width: width}).show();
+
+      if ($(this).attr('id') != 'title_input') {
+        if ($(this).val() == '') {
+          var position = $(this).offset();
+          var top = position.top + 40;
+          var left = position.left;
+          var width = $(this).outerWidth();
+          $('.team_form_dropdown').css({top: top, left: left, width: width}).show();
+          $(this).keyup(function() {
+            if ($(this).val() == '') {
+              $('.team_form_dropdown').show();
+            } else {
+              $('.team_form_dropdown').hide();
+            };
+          });
+        };
+      };
     });
 
-    $('input.form_box_md_input_text').focusout(function() {
-      $('.team_form_dropdown').hide();
+    var team_clicked = false;
+    var fill_value = "";
+    $('.team_form_dropdown_row').mousedown(function(){
+      team_clicked = true;
+      fill_value = $.trim($(this).text());
     });
+
+    $('input.form_box_md_input_text').blur(function() {
+      if (team_clicked) {
+        $(this).val(fill_value).focus();
+        team_clicked = false;
+        $('.team_form_dropdown').fadeOut(200);
+      } else {
+        $('.team_form_dropdown').fadeOut(200);
+      }
+    });
+
   };
 
   $('.team_form_dropdown').hide().removeClass('hide');

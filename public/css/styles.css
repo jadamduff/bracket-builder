@@ -440,11 +440,12 @@ body {
 
 .team_form_dropdown {
   width: 150px;
-  height: 300px;
+  max-height: 250px;
   background: white;
   box-shadow: 0 1px 3px rgba(158,158,158,0.12), 0 1px 2px rgba(158,158,158,0.24);
   position: absolute;
   z-index: 2;
+  overflow: scroll;
 }
 
 .team_form_dropdown_row {
