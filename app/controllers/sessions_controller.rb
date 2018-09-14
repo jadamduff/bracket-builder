@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
 
   get '/login' do
     if logged_in?
-      redirect '/tweets'
+      redirect '/profile'
     else
       erb :'sessions/login'
     end
@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
   post '/sessions' do
     login(params[:username], params[:password])
     if logged_in?
-      redirect '/tweets'
+      redirect '/profile'
     else
       redirect '/login'
     end

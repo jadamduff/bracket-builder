@@ -1,0 +1,79 @@
+<div class="container">
+  <% if flash.has?(:message) %>
+    <div>
+      <%= flash[:message] %>
+    </div>
+  <% end %>
+  <div class="col-60">
+    <div class="profile_dash">
+      <%= @user.username %><br />
+      <div class="trophy_box">
+        <img src="/images/trophy_icon_silver3.png" style="height: 40px" /> <%= @silvers.count %>
+      </div>
+      <div class="trophy_box">
+        <img src="/images/trophy_icon_gold4.png" style="height: 40px" /> <%= @golds.count %>
+      </div>
+    </div>
+    <div class="col_header clearfix">
+      <a href="/brackets/new"><div class="button_sm_skinny_blue right">New Bracket</div></a>
+    </div>
+    <div class="col_panel clearfix">
+      <div style="display: block" class="clearfix">
+        <div class="title clearfix">
+          Bracket Name
+        </div>
+        <div class="created_at clearfix">
+          Created 2 weeks ago
+        </div>
+      </div>
+      <div style="display: block">
+        12 Teams | In Progress | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> --
+      </div>
+    </div>
+  </div>
+  <div class="col-40">
+    <div class="col_header">
+      <% if @friend_requests.count > 0 %>
+        <div class="col_tab">
+          Friend Requests
+        </div>
+        <div class="col_panel tabbed">
+          <% @friend_requests.each do |req| %>
+            <div class="clearfix" style="line-height: 35px; vertical-align: middle; margin-bottom: 10px">
+              <%= User.find(req.user_id).username %>
+              <form action="/friend_requests/<%= req.id %>/delete" method="post" class="right">
+                <input type="hidden" id="hidden" name="_method" value="delete">
+                <input class="button_sm_skinny_red right" type="submit" value="N">
+              </form>
+              <form action="/friendships" method="post" class="right">
+                <input type="hidden" name="friend_request_id" value="<%= req.id %>">
+                <input class="button_sm_skinny_blue right" style="margin-right: 4px" type="submit" value="Y">
+              </form>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <div class="col_tab">
+        Friends
+      </div>
+      <div class="col_panel tabbed">
+        <form action="/friend_requests" method="post" style="padding: 0; margin: 0; width: 300px">
+          <div style="margin-bottom: 25px">
+            <div class="search_box_container">
+              <input type="text" name="pending_friend_name" class="search_box"><input type="submit" class="search_box_btn" value="Add" />
+            </div>
+          </div>
+        </form>
+        <% @friends.each do |friend| %>
+          <div class="clearfix" style="line-height: 35px; vertical-align: middle; margin-top: 15px">
+            <%= friend.username %>
+            <form action="/friendships/<%= friend.id %>/delete" method="post" class="right">
+              <input type="hidden" id="hidden" name="_method" value="delete">
+              <input class="button_sm_skinny_red right" type="submit" value="Remove">
+            </form>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

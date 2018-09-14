@@ -1,1 +1,19 @@
-test
+<div class="container">
+  <div class="form_box_md_container">
+    <% if flash.has?(:message) %>
+      <%= flash[:message] %>
+    <% end %>
+    <form action="/users" method="post">
+      <input autocomplete="off" autofill="off" name="hidden" type="text" style="display:none;">
+      <div class="form_box_md">
+        <p>USERNAME</p>
+        <input type="text" name="username" class="form_box_md_input_text">
+        <p>EMAIL</p>
+        <input type="text" name="email" class="form_box_md_input_text">
+        <p>PASSWORD</p>
+        <input type="password" name="password" class="form_box_md_input_text">
+      </div>
+      <input type="submit" name="Submit" class="button_md_yellow" value="Sign Up">
+    </form>
+  </div>
+</div>
