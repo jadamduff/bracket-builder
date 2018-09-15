@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_13_024850) do
+ActiveRecord::Schema.define(version: 2018_09_15_054142) do
 
   create_table "brackets", force: :cascade do |t|
     t.string "title"
@@ -48,6 +48,8 @@ ActiveRecord::Schema.define(version: 2018_09_13_024850) do
     t.integer "round_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "team1_id"
+    t.integer "team2_id"
   end
 
   create_table "rounds", force: :cascade do |t|

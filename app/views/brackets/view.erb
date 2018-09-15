@@ -1,5 +1,10 @@
 <div class="container">
-  <% @teams.each do |team| %>
-    <%= team.name %><br />
+  <% @rounds.each do |round| %>
+    <% round.games.each do |game| %>
+        <p>
+          <%= Team.find(game.team1_id).name %><br />
+          <%= Team.find(game.team2_id).name %>
+        </p>
+    <% end %>
   <% end %>
 </div>
