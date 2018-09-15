@@ -3,7 +3,11 @@
     <% round.games.each do |game| %>
         <p>
           <%= Team.find(game.team1_id).name %><br />
-          <%= Team.find(game.team2_id).name %>
+          <% if game.team2_id != nil %>
+            <%= Team.find(game.team2_id).name %>
+          <% else %>
+            Bye
+          <% end %>
         </p>
     <% end %>
   <% end %>

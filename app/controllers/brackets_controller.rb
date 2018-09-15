@@ -27,7 +27,9 @@ class BracketsController < ApplicationController
     @team_ids = []
     @num_teams = nil
     @num_games = nil
+    @num_rounds = nil
     num_games_arr = [4, 8, 16, 32, 64, 128]
+    num_rounds_arr = [3, 4, 5, 6, 7, 8]
 
     teams.each do |team|
       if team != ""
@@ -37,20 +39,40 @@ class BracketsController < ApplicationController
     end
 
     @team_ids = @team_ids.shuffle
-
     @num_teams = bracket.teams.count
-    @num_games = num_games_arr.detect {|x| x > @num_teams} / 2
+
+    if @num_teams == 2
+      @num_games = 1
+      @num_rounds = 1
+    else
+      @num_games = num_games_arr.detect {|x| x > @num_teams} / 2
+      @num_rounds = num_rounds_arr.index(@num_games)
+    end
+
     @round1 = Round.create(number: 1, bracket_id: bracket.id)
     @num_games.times do
       Game.create(round_id: @round1.id)
     end
+
+    populate_games(@round1)
+    populate_games(@round1)
+
+
+  end
+
+  def populate_games(round)
     @round1.games.each do |game|
-      if game.team1_id == nil
-        game.team1_id = @team_ids[0]
-        @team_ids.shift
-      elsif game.team2_id == nil && !@team_ids.empty?
-        game.team2_id = @team_ids[0]
-        @team_ids.shift
+      if @num_games == 1
+        game.update(team1_id: @team_ids[0])
+        game.update(team2_id: @team_ids[1])
+      else
+        if game.team1_id == nil
+          game.update(team1_id: @team_ids[0])
+          @team_ids.shift
+        elsif game.team2_id == nil && !@team_ids.empty?
+          game.update(team2_id: @team_ids[0])
+          @team_ids.shift
+        end
       end
     end
   end

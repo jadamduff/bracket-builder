@@ -70,7 +70,7 @@ $(document).ready(function() {
   setDropdown();
 
   $('#add_team_btn').click(function() {
-    $("<div class='team_form_box' style='margin-top: 0' id='team" + (current_team_num + 1) + "'><p>TEAM " + (current_team_num + 1) + "</p><input type='text' name='bracket[team][]'' class='form_box_md_input_text'></div>").insertAfter('#team' + current_team_num);
+    $("<div class='team_form_box' style='margin-top: 0' id='team" + (current_team_num + 1) + "'><p>TEAM " + (current_team_num + 1) + "</p><input type='text' name='bracket[teams][]'' class='form_box_md_input_text'></div>").insertAfter('#team' + current_team_num);
     setDropdown();
     current_team_num ++;
   });

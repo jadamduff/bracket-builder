@@ -1,4 +1,7 @@
 <div class="team_form_dropdown hide">
+  <div class="team_form_dropdown_row">
+    <%= current_user.username %>
+  </div>
   <% @friends.each do |friend| %>
     <div class="team_form_dropdown_row">
       <%= friend.username %>
