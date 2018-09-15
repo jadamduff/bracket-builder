@@ -28,13 +28,19 @@ class BracketsController < ApplicationController
     @num_teams = nil
     @num_games = nil
     @num_rounds = nil
-    num_games_arr = [4, 8, 16, 32, 64, 128]
-    num_rounds_arr = [3, 4, 5, 6, 7, 8]
+    num_teams_arr = [4, 8, 16, 32, 64, 128]
+    num_rounds_arr = [2, 3, 4, 5, 6]
 
     teams.each do |team|
       if team != ""
-        new_team = Team.create(name: team, user_id: User.find_by(username: team).id, bracket_id: bracket.id)
-        @team_ids << new_team.id
+        if User.find_by(username: team) && current_user.friends.include?(User.find_by(username: team))
+          new_team = Team.create(name: team, user_id: User.find_by(username: team).id, bracket_id: bracket.id)
+          User.find(new_team.user_id).brackets << @bracket
+          @team_ids << new_team.id
+        else
+          new_team = Team.create(name: team, bracket_id: bracket.id)
+          @team_ids << new_team.id
+        end
       end
     end
 
@@ -45,7 +51,8 @@ class BracketsController < ApplicationController
       @num_games = 1
       @num_rounds = 1
     else
-      @num_games = num_games_arr.detect {|x| x > @num_teams} / 2
+      @num_teams = num_teams_arr.detect {|x| x >= @num_teams}
+      @num_games = @num_teams / 2
       @num_rounds = num_rounds_arr.index(@num_games)
     end
 
@@ -56,12 +63,12 @@ class BracketsController < ApplicationController
 
     populate_games(@round1)
     populate_games(@round1)
-
+    binding.pry
 
   end
 
   def populate_games(round)
-    @round1.games.each do |game|
+    round.games.each do |game|
       if @num_games == 1
         game.update(team1_id: @team_ids[0])
         game.update(team2_id: @team_ids[1])
