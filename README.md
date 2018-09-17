@@ -1,3 +1,8 @@
+TODO:
+  1. update rest of bracket if winner changes
+  2. update bracket header with winner and runner-up when they are selected.
+
+
 User
   t.string :username
   t.string :email

@@ -55,22 +55,58 @@ $(document).ready(function() {
     });
   };
 
+  var checkWinner = function() {
+    var winner;
+    var runner_up;
+    if ($('.bracket_container').children().last().children().first().find('.won').length > 0) {
+      winner = $('.bracket_container').children().last().children().first().find('.won').first().prev();
+      runner_up = winner.parent().find('.winnable').first().prev();
+      $('#bracket_winner').text(winner.text().trim());
+      $('#bracket_runner_up').text(runner_up.text().trim());
+    }
+  };
+
   var setBracketFunctionality = function() {
     var clicked_id;
+    var game_col;
+    var previous_winner;
+    var new_winner;
     $('.winnable').click(function() {
       if ($(this).hasClass('winnable')) {
-        winner = $(this).prev().text().trim();
-        passed_id = $(this).parent().attr('class').split('_').pop();
-        $(this).parent().parent().next().find('.team_' + passed_id).text(winner);
-        $(this).removeClass('winnable').addClass('won');
-        clicked_id = $(this).attr('id');
-        $(this).parent().find('.button_sm_skinny').each(function() {
-          if ($(this).attr('id') != clicked_id) {
-            $(this).removeClass('won').addClass('winnable');
-          }
-        });
-        updateBracket();
-        setBracketFunctionality();
+        if ($(this).parent().find( ".button_sm_skinny[id!='" + $(this).attr("id") + "']" ).hasClass("won")) {
+          game_col = $(this).parent().parent().attr('id');
+          previous_winner = $(this).parent().find( ".button_sm_skinny[id!='" + $(this).attr("id") + "']" ).prev();
+          new_winner = $(this).prev();
+          $(this).removeClass("winnable").addClass("won");
+          $(this).parent().find( ".button_sm_skinny[id!='" + $(this).attr("id") + "']" ).removeClass("won").addClass("winnable");
+          $(this).parent().parent().parent().children().each(function() {
+            if ($(this).attr('id') > game_col) {
+              $(this).children().each(function() {
+                $(this).find(".bracket_team_box").each(function() {
+                  if ($(this).text().trim() == previous_winner.text().trim()) {
+                    $(this).text(new_winner.text().trim());
+
+                  }
+                });
+              });
+            }
+          });
+        }
+        else {
+          winner = $(this).prev().text().trim();
+          passed_id = $(this).parent().attr('class').split('_').pop();
+          $(this).parent().parent().next().find('.team_' + passed_id).text(winner);
+          $(this).removeClass('winnable').addClass('won');
+          clicked_id = $(this).attr('id');
+          $(this).parent().find('.button_sm_skinny').each(function() {
+            if ($(this).attr('id') != clicked_id) {
+              $(this).removeClass('won').addClass('winnable');
+            }
+          });
+          updateBracket();
+          setBracketFunctionality();
+          checkWinner();
+        }
       }
     });
   };
@@ -78,6 +114,7 @@ $(document).ready(function() {
   setBracketFormat();
   updateBracket();
   setBracketFunctionality();
+  checkWinner();
 
 
 
