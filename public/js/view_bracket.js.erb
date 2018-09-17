@@ -6,8 +6,8 @@ $(document).ready(function() {
 
   var setBracketFormat = function() {
     $('.bracket_round_col').each(function() {
-      $(this).css({height: $('.bracket_round_col').first().outerHeight()});
       if ($(this).attr("id") != 1) {
+        $(this).css({height: $('.bracket_round_col').first().outerHeight()});
         childrenHeight = 0;
         colHeight = $(this).outerHeight();
         numGames = $(this).children().length;
@@ -22,6 +22,8 @@ $(document).ready(function() {
             $(this).css({"margin-top": margin_top + "px"})
           }
         });
+      } else if ($(this).parent().children().length == 1) {
+        $(this).css({'padding': '30px 30px 5px 30px'});
       }
     });
   };
@@ -105,8 +107,8 @@ $(document).ready(function() {
           });
           updateBracket();
           setBracketFunctionality();
-          checkWinner();
         }
+        checkWinner();
       }
     });
   };

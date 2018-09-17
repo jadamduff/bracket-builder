@@ -19,6 +19,9 @@ $(document).ready(function() {
 
           console.log('show1');
           $(this).keyup(function() {
+            if ($(this).parent().children().first().css('color') != '#757575') {
+              $(this).parent().children().first().css({'color': '#757575'});
+            }
             if ($(this).css('color') != '#424242') {
               $(this).css({color: '#424242'});
             }
@@ -55,6 +58,7 @@ $(document).ready(function() {
 
   $('#new_bracket_form').submit(function(e){
     var ok = true;
+    var teamCount = 0;
     teams_arr = [];
     $('.form_box_md_input_text').each(function(index) {
       if ((teams_arr.indexOf($(this).val()) == -1) && (index > 0) && $(this).val() != '') {
@@ -63,8 +67,18 @@ $(document).ready(function() {
         $(this).css({color: 'red'});
         ok = false;
       }
+      if ($(this).val().trim().length > 0 && (index > 0)) {
+        teamCount ++;
+      }
     });
-    console.log(ok);
+    if (teamCount < 2) {
+      ok = false;
+      $('.form_box_md_input_text').each(function() {
+        if ($(this).val().trim().length < 1) {
+          $(this).parent().children().first().css({"color": "red"});
+        }
+      });
+    }
     if (ok == false) {
       e.preventDefault();
     }

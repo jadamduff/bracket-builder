@@ -49,3 +49,32 @@
     <% end %>
   </div>
 </div>
+<% if current_user.id == @bracket.owner_id %>
+  <form action="/brackets/:id" method="post">
+    <input id="hidden" type="hidden" name="_method" value="patch">
+    <% @bracket.rounds.each do |round| %>
+      <% round.games.each do |game| %>
+        <% if !@teams.where("id = ?", game.team1_id).empty? %>
+          <% @team1 = @teams.where("id = ?", game.team1_id).first.name %>
+        <% else %>
+          <% @team1 = "" %>
+        <% end %>
+        <% if !@teams.where("id = ?", game.team2_id).empty? %>
+          <% @team2 = @teams.where("id = ?", game.team2_id).first.name %>
+        <% else %>
+          <% @team2 = "" %>
+        <% end %>
+        <% if !@teams.where("id = ?", game.winner_id).empty? %>
+          <% @winner = @teams.find(game.winner_id).name %>
+        <% else %>
+          <% @winner = "" %>
+        <% end %>
+        <p>
+          <input type="hidden" name="bracket[rounds][][games][][team1]" value="<%= @team1 %>">
+          <input type="hidden" name="bracket[rounds][][games][][team2]" value="<%= @team2 %>">
+          <input type="hidden" name="bracket[rounds][][games][][winner]" value="<%= @winner %>">
+        </p>
+      <% end %>
+    <% end %>
+  </form>
+<% end %>
