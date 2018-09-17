@@ -11,14 +11,16 @@ class BracketsController < ApplicationController
   end
 
   post '/brackets' do
-    @bracket = Bracket.create(title: params[:title], owner_id: current_user.id)
+    @bracket = Bracket.create(title: params[:bracket][:title], owner_id: current_user.id)
     set_bracket(@bracket, params[:bracket][:teams])
     redirect "/brackets/#{@bracket.id}"
   end
 
   get '/brackets/:id' do
+    @js = ["view_bracket.js.erb"]
     @bracket = Bracket.find(params[:id])
     @rounds = @bracket.rounds
+    @first_round = @bracket.rounds.first
     @teams = @bracket.teams
     erb :'/brackets/view'
   end
@@ -29,17 +31,17 @@ class BracketsController < ApplicationController
     @num_games = nil
     @num_rounds = nil
     num_teams_arr = [4, 8, 16, 32, 64, 128]
-    num_rounds_arr = [2, 3, 4, 5, 6]
+    num_rounds_arr = [2, 3, 4, 5, 6, 7]
 
     teams.each do |team|
       if team != ""
-        if User.find_by(username: team) && current_user.friends.include?(User.find_by(username: team))
-          new_team = Team.create(name: team, user_id: User.find_by(username: team).id, bracket_id: bracket.id)
+        if User.find_by(username: team) != nil && current_user.friends.include?(User.find_by(username: team))
+          @new_team = Team.create(name: team, user_id: User.find_by(username: team).id, bracket_id: bracket.id)
           User.find(new_team.user_id).brackets << @bracket
-          @team_ids << new_team.id
+          @team_ids << @new_team.id
         else
-          new_team = Team.create(name: team, bracket_id: bracket.id)
-          @team_ids << new_team.id
+          @new_team = Team.create(name: team, bracket_id: bracket.id)
+          @team_ids << @new_team.id
         end
       end
     end
@@ -53,17 +55,24 @@ class BracketsController < ApplicationController
     else
       @num_teams = num_teams_arr.detect {|x| x >= @num_teams}
       @num_games = @num_teams / 2
-      @num_rounds = num_rounds_arr.index(@num_games)
+      @num_rounds = num_rounds_arr[num_teams_arr.index(@num_teams)]
     end
 
-    @round1 = Round.create(number: 1, bracket_id: bracket.id)
-    @num_games.times do
-      Game.create(round_id: @round1.id)
+    @round_count = 1
+    @games_in_round = @num_games
+    until @round_count > @num_rounds do
+      @round = Round.create(number: @round_count, bracket_id: bracket.id)
+      @games_in_round.times do
+        Game.create(round_id: @round.id)
+      end
+      @round_count += 1
+      @games_in_round = @games_in_round / 2
     end
+
+    @round1 = bracket.rounds.find_by(number: 1)
 
     populate_games(@round1)
     populate_games(@round1)
-    binding.pry
 
   end
 

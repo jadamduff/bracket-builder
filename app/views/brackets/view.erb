@@ -1,14 +1,48 @@
-<div class="container">
-  <% @rounds.each do |round| %>
-    <% round.games.each do |game| %>
-        <p>
-          <%= Team.find(game.team1_id).name %><br />
-          <% if game.team2_id != nil %>
-            <%= Team.find(game.team2_id).name %>
-          <% else %>
-            Bye
-          <% end %>
-        </p>
+<div class="bracket_header clearfix">
+  <div style="display: inline-block">
+    <%= @bracket.title %>
+    <p style="color: #616161; font-size: 14px; margin: 10px 0 0 0">
+      <%= @bracket.teams.count %> Teams
+    </p>
+  </div>
+  <div class="right">
+    <div class="trophy_box right" style="font-size: 18px; line-height: 30px">
+      <img src="/images/trophy_icon_silver3.png" style="height: 30px" /> rach
+    </div>
+    <div class="trophy_box right" style="font-size: 18px; line-height: 30px">
+      <img src="/images/trophy_icon_gold4.png" style="height: 30px" /> jadamduff
+    </div>
+  </div>
+</div>
+<div class="bracket_window">
+  <div class="bracket_container clearfix">
+    <% @rounds.each do |round| %>
+      <div class="bracket_round_col" id="<%= round.number %>">
+        <% @game_count = 1 %>
+        <% round.games.each do |game| %>
+          <div class="bracket_game_box game_<%= @game_count %>">
+            <div class="bracket_team_box" id="<%= game.team1_id %>">
+              <% if game.team1_id != nil %>
+                <%= Team.find(game.team1_id).name %><br />
+              <% end %>
+            </div>
+            <div class="button_sm_skinny inactive" style="margin-bottom: 10px">
+              Won
+            </div><br />
+            <div class="bracket_team_box" id="<%= game.team1_id %>">
+              <% if game.team2_id != nil %>
+                <%= Team.find(game.team2_id).name %>
+              <% elsif round == @first_round%>
+                Bye
+              <% end %>
+            </div>
+            <div class="button_sm_skinny inactive" style="margin-bottom: 10px">
+              Won
+            </div>
+          </div>
+          <% @game_count += 1 %>
+        <% end %>
+      </div>
     <% end %>
-  <% end %>
+  </div>
 </div>

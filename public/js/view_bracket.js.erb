@@ -1,0 +1,47 @@
+$(document).ready(function() {
+  var colHeight;
+  var childrenHeight;
+  var numGames;
+  var margin_top;
+
+  var setBracketFormat = function() {
+    $('.bracket_round_col').each(function() {
+      $(this).css({height: $('.bracket_round_col').first().outerHeight()});
+      if ($(this).attr("id") != 1) {
+        childrenHeight = 0;
+        colHeight = $(this).outerHeight();
+        numGames = $(this).children().length;
+        $(this).children().each(function() {
+          childrenHeight += $(this).outerHeight();
+        });
+        margin_top = (colHeight - childrenHeight) / numGames;
+        $(this).children().each(function() {
+          if ($(this).hasClass("game_1")) {
+            $(this).css({"margin-top": ((margin_top / 2) - 17) + "px"})
+          } else {
+            $(this).css({"margin-top": margin_top + "px"})
+          }
+        });
+      }
+    });
+  };
+
+
+  var setBracketFunctionality = function() {
+    $('.bracket_round_col').each(function() {
+      $(this).children().each(function() {
+        teams = $(this).find('.bracket_team_box');
+        if (teams.first().text().trim().length > 0 && teams.last().text().trim().length > 0)
+        teams.each(function() {
+          $(this).next().removeClass("inactive").addClass("winnable");
+        });
+      });
+    });
+  };
+
+  setBracketFormat();
+  setBracketFunctionality();
+
+
+
+});

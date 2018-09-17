@@ -1,6 +1,120 @@
 
 @import url('https://fonts.googleapis.com/css?family=Bangers|Open+Sans:600');
 
+/* /// Bracket /// */
+
+.bracket_window {
+  border: 1px solid #eee;
+  border-radius: 3px;
+  text-align: left;
+  background: #fff;
+  overflow: scroll;
+  overflow-x: scroll;
+  position: absolute;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 50px 50px 0 50px;
+  bottom: 100px;
+  top: 200px;
+  left: 25px;
+  right: 25px;
+  width: 100%;
+  z-index: 3;
+  text-align: center;
+}
+
+.bracket_container {
+  text-align: left;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 100%;
+  line-height: 100%;
+}
+
+.bracket_header {
+  font-size: 38px;
+  color: #424242;
+  font-family: 'Open Sans', sans-serif;
+  text-align: left;
+  position: absolute;
+  max-width: 960px;
+  margin: 0 auto;
+  height: 90px;
+  top: 100px;
+  left: 25px;
+  right: 25px;
+  width: 100%;
+  z-index: 3;
+}
+
+.bracket_round_col {
+  display: inline-block;
+  width: 280px;
+  margin: 0 60px 0 0;
+  vertical-align: top;
+}
+
+.bracket_game_box {
+  margin-bottom: 30px;
+}
+
+.bracket_team_box {
+  font-size: 12px;
+  color: #212121;
+  font-family: 'Open Sans', sans-serif;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  vertical-align: middle;
+  padding: 0 15px;
+  margin: 0 5px 10px 0;
+  box-shadow: 0 1px 3px rgba(100,100,100,0.12), 0 1px 2px rgba(100,100,100,0.24);
+  display: inline-block;
+}
+
+.button_sm_skinny {
+  border-radius: 3px;
+  height: 35px;
+  line-height: 35px;
+  vertical-align: middle;
+  text-align: center;
+  display: inline-block;
+  padding: 0 15px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  outline: none;
+}
+
+.button_sm_skinny_gray:hover {
+  cursor: default;
+}
+
+.inactive {
+  background: #F5F5F5;
+  border: 1px solid #eee;
+  color: #757575;
+}
+
+.inactive:hover {
+  cursor: default;
+}
+
+.winnable {
+  background: #E3F2FD;
+  border: 1px solid #d3eafc;
+  color: #42A5F5;
+}
+
+.winnable:hover {
+  cursor: pointer;
+  background: #D9EFFF;
+}
+
+.won {
+
+}
+
+
 * {
   box-sizing: border-box;
 }
@@ -35,7 +149,14 @@
   text-align: right;
 }
 
+html {
+  height: 100%;
+  overflow: hidden
+}
+
 body {
+  height: 100%;
+  overflow: auto;
   background: #FAFAFA;
   margin: 0;
   padding: 0 0 100px 0;
