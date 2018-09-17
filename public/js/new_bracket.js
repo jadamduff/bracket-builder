@@ -3,6 +3,9 @@ $(document).ready(function() {
   var current_team_num = 2;
   var teams_arr = []
 
+  $('body').css({"overflow": "inherit"});
+  $('html').css({"overflow": "inherit"});
+
   var setDropdown = function() {
     $('input.form_box_md_input_text').focus(function() {
 
@@ -13,6 +16,7 @@ $(document).ready(function() {
           var left = position.left;
           var width = $(this).outerWidth();
           $('.team_form_dropdown').stop(true, true).css({top: top, left: left, width: width}).show();
+
           console.log('show1');
           $(this).keyup(function() {
             if ($(this).css('color') != '#424242') {

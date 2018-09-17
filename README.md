@@ -1,6 +1,6 @@
 TODO:
-  1. update rest of bracket if winner changes
-  2. update bracket header with winner and runner-up when they are selected.
+  1. Make sure that at least 2 teams are entered in new team.
+  2. Create hidden form for a bracket and user Jquery to fill it in on submit.
 
 
 User
