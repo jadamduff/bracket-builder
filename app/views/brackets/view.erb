@@ -17,26 +17,29 @@
 <div class="bracket_window">
   <div class="bracket_container clearfix">
     <% @rounds.each do |round| %>
-      <div class="bracket_round_col" id="<%= round.number %>">
+      <div class="bracket_round_col <%= 'championship' if round.number == @rounds.count %>" id="<%= round.number %>">
         <% @game_count = 1 %>
+        <% @team_count = 1 %>
         <% round.games.each do |game| %>
           <div class="bracket_game_box game_<%= @game_count %>">
-            <div class="bracket_team_box" id="<%= game.team1_id %>">
+            <div class="bracket_team_box team_<%= @team_count %>">
               <% if game.team1_id != nil %>
                 <%= Team.find(game.team1_id).name %><br />
               <% end %>
             </div>
-            <div class="button_sm_skinny inactive" style="margin-bottom: 10px">
+            <% @team_count += 1 %>
+            <div class="button_sm_skinny inactive" style="margin-bottom: 10px" id="1">
               Won
             </div><br />
-            <div class="bracket_team_box" id="<%= game.team1_id %>">
+            <div class="bracket_team_box team_<%= @team_count %>">
               <% if game.team2_id != nil %>
                 <%= Team.find(game.team2_id).name %>
               <% elsif round == @first_round%>
                 Bye
               <% end %>
             </div>
-            <div class="button_sm_skinny inactive" style="margin-bottom: 10px">
+            <% @team_count += 1 %>
+            <div class="button_sm_skinny inactive" style="margin-bottom: 10px" id="2">
               Won
             </div>
           </div>

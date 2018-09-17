@@ -27,19 +27,56 @@ $(document).ready(function() {
   };
 
 
-  var setBracketFunctionality = function() {
+  var updateBracket = function() {
+    var winner;
+    var clicked_id;
     $('.bracket_round_col').each(function() {
+      if ($(this).attr('id') == 1) {
+        $(this).children().each(function() {
+          teams = $(this).find('.bracket_team_box');
+          if (teams.last().text().trim() == "Bye") {
+            teams.first().next().removeClass('inactive').addClass('won');
+            winner = teams.first().text().trim();
+            passed_id = teams.last().parent().attr('class').split('_').pop();
+            teams.last().parent().parent().next().find('.team_' + passed_id).text(winner);
+          }
+        });
+      }
       $(this).children().each(function() {
         teams = $(this).find('.bracket_team_box');
-        if (teams.first().text().trim().length > 0 && teams.last().text().trim().length > 0)
-        teams.each(function() {
-          $(this).next().removeClass("inactive").addClass("winnable");
-        });
+        if (teams.first().text().trim().length > 0 && teams.last().text().trim().length > 0) {
+          teams.each(function() {
+            if ($(this).next().hasClass('inactive') && $(this).text().trim() != "Bye") {
+              $(this).next().removeClass("inactive").addClass("winnable");
+            }
+          });
+        }
       });
     });
   };
 
+  var setBracketFunctionality = function() {
+    var clicked_id;
+    $('.winnable').click(function() {
+      if ($(this).hasClass('winnable')) {
+        winner = $(this).prev().text().trim();
+        passed_id = $(this).parent().attr('class').split('_').pop();
+        $(this).parent().parent().next().find('.team_' + passed_id).text(winner);
+        $(this).removeClass('winnable').addClass('won');
+        clicked_id = $(this).attr('id');
+        $(this).parent().find('.button_sm_skinny').each(function() {
+          if ($(this).attr('id') != clicked_id) {
+            $(this).removeClass('won').addClass('winnable');
+          }
+        });
+        updateBracket();
+        setBracketFunctionality();
+      }
+    });
+  };
+
   setBracketFormat();
+  updateBracket();
   setBracketFunctionality();
 
 
