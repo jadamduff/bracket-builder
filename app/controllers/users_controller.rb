@@ -56,6 +56,21 @@ class UsersController < ApplicationController
         redirect '/profile'
       else
         @user = User.find_by(username: params[:username])
+        @friends = @user.friends
+        @brackets = @user.brackets.order(created_at: :desc)
+        @golds = []
+        @brackets.where("champ_name = ?", @user.username).each do |bracket|
+          if @user.brackets.include?(bracket)
+            @golds << bracket
+          end
+        end
+        @silvers = []
+        @brackets.where("runner_up_name = ?", @user.username).each do |bracket|
+          if @user.brackets.include?(bracket)
+            @silvers << bracket
+          end
+        end
+        
         erb :'users/view'
       end
     else

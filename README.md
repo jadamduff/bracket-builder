@@ -1,6 +1,9 @@
 TODO:
-  1. Make sure that at least 2 teams are entered in new team.
-  2. Create hidden form for a bracket and user Jquery to fill it in on submit.
+  1. Put owner tag on profile, user/view, and bracket/view
+  2. Create an edit page and controller method that cycles through the teams of round 1 to determine if they have changed and creates a new team if they have, before deleting the teams that the new teams replaced. It then cycles through all other games, clearing the team ids. It also clears the bracket's winner and runner_up. The page has a shuffle button that doesn't change anything except the order of teams. A Delete button deletes the entire bracket and all rounds/games/teams. Buttons: Save, Shuffle, Cancel, Delete
+  3. Put links on all user names.
+  4. Make sure that all pages and actions have the right permissions.
+  5. Create 12 seed users, including 'adam'.
 
 
 User

@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  var current_team_num = 2;
+  var current_team_num = $('.form_box_md_input_text').length - 1;
   var teams_arr = []
 
   $('body').css({"overflow": "inherit"});
@@ -16,24 +16,26 @@ $(document).ready(function() {
           var left = position.left;
           var width = $(this).outerWidth();
           $('.team_form_dropdown').stop(true, true).css({top: top, left: left, width: width}).show();
-
-          console.log('show1');
-          $(this).keyup(function() {
-            if ($(this).parent().children().first().css('color') != '#757575') {
-              $(this).parent().children().first().css({'color': '#757575'});
-            }
-            if ($(this).css('color') != '#424242') {
-              $(this).css({color: '#424242'});
-            }
-            if ($(this).val() == '') {
-              $('.team_form_dropdown').css({top: top, left: left, width: width}).show();
-              console.log('show2');
-            } else {
-              $('.team_form_dropdown').hide();
-              console.log('hide1');
-            };
-          });
-        };
+        }
+        $(this).keyup(function() {
+          var position = $(this).offset();
+          var top = position.top + 40;
+          var left = position.left;
+          var width = $(this).outerWidth();
+          if ($(this).parent().children().first().css('color') != '#757575') {
+            $(this).parent().children().first().css({'color': '#757575'});
+          }
+          if ($(this).css('color') != '#424242') {
+            $(this).css({color: '#424242'});
+          }
+          if ($(this).val().trim() == '') {
+            $('.team_form_dropdown').css({top: top, left: left, width: width}).show();
+            console.log('show2');
+          } else {
+            $('.team_form_dropdown').hide();
+            console.log('hide1');
+          };
+        });
       };
     });
 
@@ -53,7 +55,6 @@ $(document).ready(function() {
       $('.team_form_dropdown').fadeOut(200);
       console.log('fadeout1');
     });
-
   };
 
   $('#new_bracket_form').submit(function(e){
@@ -88,6 +89,7 @@ $(document).ready(function() {
   setDropdown();
 
   $('#add_team_btn').click(function() {
+    console.log("clicked");
     $("<div class='team_form_box' style='margin-top: 0' id='team" + (current_team_num + 1) + "'><p>TEAM " + (current_team_num + 1) + "</p><input type='text' name='bracket[teams][]'' class='form_box_md_input_text'></div>").insertAfter('#team' + current_team_num);
     setDropdown();
     current_team_num ++;

@@ -3,7 +3,7 @@ class BracketsController < ApplicationController
   get '/brackets/new' do
     if logged_in?
       @friends = current_user.friends
-      @js = ["new_bracket.js"]
+      @js = ["new_bracket.js.erb"]
       erb :'/brackets/new'
     else
       redirect '/login'
@@ -49,7 +49,7 @@ class BracketsController < ApplicationController
       end
     end
     @championship = @bracket.rounds.last.games.first
-    if @championship != nil
+    if @championship.winner_id != nil
       @team1_name = Team.find(@championship.team1_id).name
       @team2_name = Team.find(@championship.team2_id).name
       @bracket.champ_name = Team.find(@championship.winner_id).name
@@ -61,6 +61,30 @@ class BracketsController < ApplicationController
       end
       @bracket.save
     end
+    redirect "/brackets/#{@bracket.id}"
+  end
+
+  get '/brackets/:id/edit' do
+    if logged_in?
+      @bracket = Bracket.find(params[:id])
+      @teams = @bracket.teams
+      @friends = current_user.friends
+      @js = ["new_bracket.js.erb"]
+      erb :'/brackets/edit'
+    else
+      redirect '/login'
+    end
+  end
+
+  patch '/brackets/:id/edit' do
+    @bracket = Bracket.find(params[:id])
+    @bracket.rounds.delete_all
+    @bracket.rounds.each do |game|
+      round.games.delete_all
+    end
+    @bracket.teams.delete_all
+    @bracket.save
+    set_bracket(@bracket, params[:bracket][:teams])
     redirect "/brackets/#{@bracket.id}"
   end
 
@@ -76,7 +100,7 @@ class BracketsController < ApplicationController
       if team != ""
         if User.find_by(username: team) != nil && (current_user.friends.include?(User.find_by(username: team)) || current_user.username == team)
           @new_team = Team.create(name: team, user_id: User.find_by(username: team).id, bracket_id: bracket.id)
-          User.find(@new_team.user_id).brackets << @bracket
+          User.find(@new_team.user_id).brackets << @bracket if !User.find(@new_team.user_id).brackets.include?(@bracket)
           @team_ids << @new_team.id
         else
           @new_team = Team.create(name: team, bracket_id: bracket.id)
