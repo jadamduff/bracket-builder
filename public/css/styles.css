@@ -3,32 +3,45 @@
 
 /* /// Bracket /// */
 
+.bracket_window_container {
+  position: absolute;
+  max-width: 960px;
+  top: 185px;
+  left: 25px;
+  right: 25px;
+  bottom: 20px;
+  text-align: left;
+  margin: 0 auto;
+  min-height: 300px;
+  vertical-align: bottom;
+}
+
 .bracket_window {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 60px;
   border: 1px solid #eee;
   border-radius: 3px;
   text-align: left;
   background: #fff;
   overflow: scroll;
   overflow-x: scroll;
-  position: absolute;
-  max-width: 960px;
-  margin: 0 auto;
   padding: 50px 50px 0 50px;
-  bottom: 100px;
-  top: 200px;
-  left: 25px;
-  right: 25px;
   width: 100%;
-  z-index: 3;
-  text-align: center;
 }
 
 .bracket_container {
   text-align: left;
   display: inline-block;
   white-space: nowrap;
-  line-height: 100%;
-  line-height: 100%;
+
+}
+
+.bracket_submit {
+  position: absolute;
+  bottom: 0px;
 }
 
 .bracket_header {
@@ -40,7 +53,7 @@
   max-width: 960px;
   margin: 0 auto;
   height: 90px;
-  top: 100px;
+  top: 87px;
   left: 25px;
   right: 25px;
   width: 100%;
@@ -429,6 +442,29 @@ body {
 }
 
 .button_sm_yellow:hover {
+  cursor: pointer;
+  background: #ffeb3b;
+  color: #eb6500;
+}
+
+.button_sm_skinny_yellow {
+  background: #FFEE58;
+  border: 1px solid #FDD835;
+  border-radius: 3px;
+  height: 35px;
+  line-height: 35px;
+  vertical-align: middle;
+  text-align: center;
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 0 30px;
+  color: #FF6D00;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  outline: none;
+}
+
+.button_sm_skinny_yellow:hover {
   cursor: pointer;
   background: #ffeb3b;
   color: #eb6500;

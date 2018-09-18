@@ -5,7 +5,7 @@
       <%= @bracket.teams.count %> Teams
     </p>
   </div>
-  <div class="right">
+  <div class="right" style="margin-top: 12px">
     <div class="trophy_box right" style="font-size: 18px; line-height: 30px">
       <img src="/images/trophy_icon_silver3.png" style="height: 30px" /> <span id="bracket_runner_up">--</span>
     </div>
@@ -14,67 +14,76 @@
     </div>
   </div>
 </div>
-<div class="bracket_window">
-  <div class="bracket_container clearfix">
-    <% @rounds.each do |round| %>
-      <div class="bracket_round_col <%= 'championship' if round.number == @rounds.count %>" id="<%= round.number %>">
-        <% @game_count = 1 %>
-        <% @team_count = 1 %>
-        <% round.games.each do |game| %>
-          <div class="bracket_game_box game_<%= @game_count %>">
-            <div class="bracket_team_box team_<%= @team_count %>">
-              <% if game.team1_id != nil %>
-                <%= Team.find(game.team1_id).name %><br />
-              <% end %>
+<div class="bracket_window_container clearfix">
+  <div class="bracket_window">
+    <div class="bracket_container clearfix">
+      <% @rounds.each do |round| %>
+        <div class="bracket_round_col <%= 'championship' if round.number == @rounds.count %>" id="<%= round.number %>">
+          <% @game_count = 1 %>
+          <% @team_count = 1 %>
+          <% round.games.each do |game| %>
+            <div class="bracket_game_box game_<%= @game_count %>">
+              <div class="bracket_team_box team_<%= @team_count %>">
+                <% if game.team1_id != nil %>
+                  <%= Team.find(game.team1_id).name %><br />
+                <% end %>
+              </div>
+              <% @team_count += 1 %>
+              <div class="button_sm_skinny <% if game.winner_id == game.team1_id && game.winner_id != nil %>won<% else %>inactive<% end %>" style="margin-bottom: 10px" id="1">
+                Won
+              </div><br />
+              <div class="bracket_team_box team_<%= @team_count %>">
+                <% if game.team2_id != nil %>
+                  <%= Team.find(game.team2_id).name %>
+                <% elsif round == @first_round%>
+                  Bye
+                <% end %>
+              </div>
+              <% @team_count += 1 %>
+              <div class="button_sm_skinny <% if game.winner_id == game.team2_id && game.winner_id != nil %>won<% else %>inactive<% end %>" style="margin-bottom: 10px" id="2">
+                Won
+              </div>
             </div>
-            <% @team_count += 1 %>
-            <div class="button_sm_skinny inactive" style="margin-bottom: 10px" id="1">
-              Won
-            </div><br />
-            <div class="bracket_team_box team_<%= @team_count %>">
-              <% if game.team2_id != nil %>
-                <%= Team.find(game.team2_id).name %>
-              <% elsif round == @first_round%>
-                Bye
-              <% end %>
-            </div>
-            <% @team_count += 1 %>
-            <div class="button_sm_skinny inactive" style="margin-bottom: 10px" id="2">
-              Won
-            </div>
-          </div>
-          <% @game_count += 1 %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-</div>
-<% if current_user.id == @bracket.owner_id %>
-  <form action="/brackets/:id" method="post">
-    <input id="hidden" type="hidden" name="_method" value="patch">
-    <% @bracket.rounds.each do |round| %>
-      <% round.games.each do |game| %>
-        <% if !@teams.where("id = ?", game.team1_id).empty? %>
-          <% @team1 = @teams.where("id = ?", game.team1_id).first.name %>
-        <% else %>
-          <% @team1 = "" %>
-        <% end %>
-        <% if !@teams.where("id = ?", game.team2_id).empty? %>
-          <% @team2 = @teams.where("id = ?", game.team2_id).first.name %>
-        <% else %>
-          <% @team2 = "" %>
-        <% end %>
-        <% if !@teams.where("id = ?", game.winner_id).empty? %>
-          <% @winner = @teams.find(game.winner_id).name %>
-        <% else %>
-          <% @winner = "" %>
-        <% end %>
-        <p>
-          <input type="hidden" name="bracket[rounds][][games][][team1]" value="<%= @team1 %>">
-          <input type="hidden" name="bracket[rounds][][games][][team2]" value="<%= @team2 %>">
-          <input type="hidden" name="bracket[rounds][][games][][winner]" value="<%= @winner %>">
-        </p>
+            <% @game_count += 1 %>
+          <% end %>
+        </div>
       <% end %>
-    <% end %>
-  </form>
-<% end %>
+    </div>
+  </div>
+  <% if current_user.id == @bracket.owner_id %>
+    <div class="bracket_submit">
+      <form action="/brackets/<%= @bracket.id %>" method="post" class="bracket_submit">
+        <input id="hidden" type="hidden" name="_method" value="patch">
+        <% @bracket.rounds.each_with_index do |round, round_index| %>
+          <div id="round_<%= round.number %>">
+            <% @game_count = 1 %>
+            <% round.games.each do |game| %>
+              <% if !@teams.where("id = ?", game.team1_id).empty? %>
+                <% @team1 = @teams.where("id = ?", game.team1_id).first.name %>
+              <% else %>
+                <% @team1 = "" %>
+              <% end %>
+              <% if !@teams.where("id = ?", game.team2_id).empty? %>
+                <% @team2 = @teams.where("id = ?", game.team2_id).first.name %>
+              <% else %>
+                <% @team2 = "" %>
+              <% end %>
+              <% if !@teams.where("id = ?", game.winner_id).empty? %>
+                <% @winner = @teams.find(game.winner_id).name %>
+              <% else %>
+                <% @winner = "" %>
+              <% end %>
+              <p id="game_<%= @game_count %>">
+                <input type="hidden" name="bracket[rounds][<%= round_index %>][games][][team1]" value="<%= @team1 %>">
+                <input type="hidden" name="bracket[rounds][<%= round_index %>][games][][team2]" value="<%= @team2 %>">
+                <input type="hidden" name="bracket[rounds][<%= round_index %>][games][][winner]" value="<%= @winner %>">
+              </p>
+              <% @game_count += 1 %>
+            <% end %>
+          </div>
+        <% end %>
+        <input type="submit" class="button_sm_skinny_yellow" value="Save">
+      </form>
+    </div>
+  <% end %>
+</div>

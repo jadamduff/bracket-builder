@@ -25,6 +25,33 @@ class BracketsController < ApplicationController
     erb :'/brackets/view'
   end
 
+  patch '/brackets/:id' do
+    @bracket = Bracket.find(params[:id])
+    params["bracket"]["rounds"].each_with_index do |round, round_index|
+      round[1]["games"].each_with_index do |game, game_index|
+        @update_game = @bracket.rounds[round_index].games[game_index]
+        @update_team1_id = nil
+        @update_team2_id = nil
+        @update_winner_id = nil
+        if !@bracket.teams.where("name = ?", game["team1"]).empty?
+          @update_team1_id = @bracket.teams.find_by(name: game["team1"]).id
+        end
+        if !@bracket.teams.where("name = ?", game["team2"]).empty?
+          @update_team2_id = @bracket.teams.find_by(name: game["team2"]).id
+        end
+        if !@bracket.teams.where("name = ?", game["winner"]).empty?
+          @update_winner_id = @bracket.teams.find_by(name: game["winner"]).id
+        end
+        @update_game.team1_id = @update_team1_id
+        @update_game.team2_id = @update_team2_id
+        @update_game.winner_id = @update_winner_id
+        @update_game.save
+      end
+    end
+
+    redirect "/brackets/#{@bracket.id}"
+  end
+
   def set_bracket(bracket, teams)
     @team_ids = []
     @num_teams = nil

@@ -105,13 +105,36 @@ $(document).ready(function() {
               $(this).removeClass('won').addClass('winnable');
             }
           });
-          updateBracket();
-          setBracketFunctionality();
         }
+        updateBracket();
+        setBracketFunctionality();
         checkWinner();
       }
     });
   };
+
+  var fillBracketForm = function() {
+    var round;
+    var game;
+    var team;
+    $('.bracket_container').children().each(function(index) {
+      round = index + 1;
+      $(this).children().each(function(game_index) {
+        game = game_index + 1;
+        $(this).find('.bracket_team_box').each(function(team_index) {
+          team = team_index + 1;
+          $('.bracket_submit').find('#round_' + round).find('#game_' + game).find("[name='bracket[rounds][" + index + "][games][][team" + team + "]']").val($(this).text().trim());
+          if ($(this).next().hasClass("won")) {
+            $('.bracket_submit').find('#round_' + round).find('#game_' + game).find("[name='bracket[rounds][" + index + "][games][][winner]']").val($(this).text().trim());
+          }
+        });
+      });
+    });
+  };
+
+  $('.bracket_submit').submit(function(e) {
+    fillBracketForm();
+  });
 
   setBracketFormat();
   updateBracket();
