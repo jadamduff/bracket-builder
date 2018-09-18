@@ -5,10 +5,20 @@ class UsersController < ApplicationController
       @user = current_user
       @friend_requests = FriendRequest.where("pending_friend_id = ?", @user.id)
       @friends = @user.friends
-      @brackets = @user.brackets
-      @golds = @brackets.where("champ_id = ?", @user.id)
-      @silvers = @brackets.where("runnder_up_id = ?", @user.id)
-      erb :'/users/show'
+      @brackets = @user.brackets.order(created_at: :desc)
+      @golds = []
+      @brackets.where("champ_name = ?", @user.username).each do |bracket|
+        if @user.brackets.include?(bracket)
+          @golds << bracket
+        end
+      end
+      @silvers = []
+      @brackets.where("runner_up_name = ?", @user.username).each do |bracket|
+        if @user.brackets.include?(bracket)
+          @silvers << bracket
+        end
+      end
+      erb :'/users/profile'
     else
       redirect "/login"
     end
@@ -37,6 +47,19 @@ class UsersController < ApplicationController
         flash[:message] = "That email is taken."
       end
       redirect '/'
+    end
+  end
+
+  get '/:username' do
+    if logged_in?
+      if current_user.username == params[:username]
+        redirect '/profile'
+      else
+        @user = User.find_by(username: params[:username])
+        erb :'users/view'
+      end
+    else
+      redirect '/login'
     end
   end
 

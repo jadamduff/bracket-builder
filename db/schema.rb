@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_15_054142) do
+ActiveRecord::Schema.define(version: 2018_09_18_082645) do
 
   create_table "brackets", force: :cascade do |t|
     t.string "title"
     t.integer "owner_id"
-    t.integer "champ_id"
-    t.integer "runnder_up_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "champ_name"
+    t.string "runner_up_name"
   end
 
   create_table "friend_requests", force: :cascade do |t|

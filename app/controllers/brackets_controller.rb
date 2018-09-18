@@ -48,7 +48,19 @@ class BracketsController < ApplicationController
         @update_game.save
       end
     end
-
+    @championship = @bracket.rounds.last.games.first
+    if @championship != nil
+      @team1_name = Team.find(@championship.team1_id).name
+      @team2_name = Team.find(@championship.team2_id).name
+      @bracket.champ_name = Team.find(@championship.winner_id).name
+      @bracket.save
+      if @bracket.champ_name == @team1_name
+        @bracket.runner_up_name = @team2_name
+      else
+        @bracket.runner_up_name = @team1_name
+      end
+      @bracket.save
+    end
     redirect "/brackets/#{@bracket.id}"
   end
 
@@ -62,9 +74,9 @@ class BracketsController < ApplicationController
 
     teams.each do |team|
       if team != ""
-        if User.find_by(username: team) != nil && current_user.friends.include?(User.find_by(username: team))
+        if User.find_by(username: team) != nil && (current_user.friends.include?(User.find_by(username: team)) || current_user.username == team)
           @new_team = Team.create(name: team, user_id: User.find_by(username: team).id, bracket_id: bracket.id)
-          User.find(new_team.user_id).brackets << @bracket
+          User.find(@new_team.user_id).brackets << @bracket
           @team_ids << @new_team.id
         else
           @new_team = Team.create(name: team, bracket_id: bracket.id)
