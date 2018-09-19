@@ -105,6 +105,7 @@ class BracketsController < ApplicationController
           round.games.delete_all
         end
         @bracket.teams.delete_all
+        @bracket.champ_name = nil
         @bracket.save
         set_bracket(@bracket, params[:bracket][:teams])
         redirect "/brackets/#{@bracket.id}"
