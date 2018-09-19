@@ -26,7 +26,7 @@
               <div class="bracket_team_box team_<%= @team_count %>">
                 <% if game.team1_id != nil %>
                   <% if !User.where("id = ?", Team.find(game.team1_id).user_id).empty? %>
-                    <a href="/users/<%= Team.find(game.team1_id).name %>" class="user_link"><%= Team.find(game.team1_id).name %></a><br />
+                    <a href="/users/<%= Team.find(game.team1_id).name %>" class="user_link" style="color: #212121"><%= Team.find(game.team1_id).name %></a><br />
                   <% else %>
                     <%= Team.find(game.team1_id).name %><br />
                   <% end %>

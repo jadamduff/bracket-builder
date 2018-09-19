@@ -120,6 +120,11 @@ class BracketsController < ApplicationController
     if logged_in?
       @bracket = Bracket.find(params[:id])
       if current_user.id == @bracket.owner_id
+        @bracket.rounds.each do |round|
+          round.delete
+        end
+        @bracket.rounds.delete_all
+        @bracket.teams.delete_all
         @bracket.delete
         redirect '/profile'
       else

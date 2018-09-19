@@ -33,7 +33,7 @@
             </div>
           </div>
           <div style="display: block">
-            <% if bracket.owner_id == current_user.id %><span class="owner">OWNER</span> | <% end %><%= bracket.teams.count %> Teams | <% if bracket.champ_name != nil %>Finished<% else %>In Progress<% end %> | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> <% if bracket.champ_name != nil %><% if !User.where("username = ?", bracket.champ_name).empty? %><a href="/users/<%= bracket.champ_name %>" class="user_link"><%= bracket.champ_name %></a><% else %><%= bracket.champ_name %><% end %><% else %>--<% end %>
+            <% if bracket.owner_id == current_user.id %><span class="owner">OWNER</span> | <% end %><%= bracket.teams.count %> Teams | <% if bracket.champ_name != nil %>Finished<% else %>In Progress<% end %> | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> <% if bracket.champ_name != nil %><% if !User.where("username = ?", bracket.champ_name).empty? %><a href="/users/<%= bracket.champ_name %>" class="user_link" style="color: #424242"><%= bracket.champ_name %></a><% else %><%= bracket.champ_name %><% end %><% else %>--<% end %>
           </div>
         </div>
       <% end %>
@@ -43,12 +43,12 @@
     <div class="col_header">
       <% if @friend_requests.count > 0 %>
         <div class="col_tab">
-          Friend Requests
+          Friend Requests (<%= @friend_requests.count %>)
         </div>
         <div class="col_panel tabbed">
           <% @friend_requests.each do |req| %>
             <div class="clearfix" style="line-height: 35px; vertical-align: middle; margin-bottom: 10px">
-              <a href="/users/<%= User.find(req.user_id).username %>" class="user_link"><%= User.find(req.user_id).username %></a>
+              <a href="/users/<%= User.find(req.user_id).username %>" class="user_link" style="color: #616161;"><%= User.find(req.user_id).username %></a>
               <form action="/friend_requests/<%= req.id %>/delete" method="post" class="right">
                 <input type="hidden" id="hidden" name="_method" value="delete">
                 <input class="button_sm_skinny_red right" type="submit" value="N">
@@ -62,7 +62,7 @@
         </div>
       <% end %>
       <div class="col_tab">
-        Friends
+        Friends (<%= @friends.count %>)
       </div>
       <div class="col_panel tabbed">
         <form action="/friend_requests" method="post" style="padding: 0; margin: 0; width: 300px">

@@ -30,7 +30,7 @@
             </div>
           </div>
           <div style="display: block">
-            <% if bracket.owner_id == current_user.id %><span class="owner">OWNER</span> | <% end %><%= bracket.teams.count %> Teams | <% if bracket.champ_name != nil %>Finished<% else %>In Progress<% end %> | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> <% if bracket.champ_name != nil %><% if !User.where("username = ?", bracket.champ_name).empty? %><a href="/users/<%= bracket.champ_name %>" class="user_link"><%= bracket.champ_name %></a><% else %><%= bracket.champ_name %><% end %><% else %>--<% end %>
+            <% if bracket.owner_id == current_user.id %><span class="owner">OWNER</span> | <% end %><%= bracket.teams.count %> Teams | <% if bracket.champ_name != nil %>Finished<% else %>In Progress<% end %> | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> <% if bracket.champ_name != nil %><% if !User.where("username = ?", bracket.champ_name).empty? %><a href="/users/<%= bracket.champ_name %>" class="user_link" style="color: #424242"><%= bracket.champ_name %></a><% else %><%= bracket.champ_name %><% end %><% else %>--<% end %>
           </div>
         </div>
       <% end %>
@@ -39,7 +39,7 @@
   <div class="col-40">
     <div class="col_header">
       <div class="col_tab">
-        Friends
+        Friends (<%= @friends.count %>)
       </div>
       <div class="col_panel tabbed" style="padding: 25px 40px">
         <% @friends.each do |friend| %>
