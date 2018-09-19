@@ -40,5 +40,10 @@
       </div>
       <input type="submit" class="button_md_yellow" value="Update">
     </form>
+    <div style="width: 100%; height: 1px; background: #eee; margin: 10px 0 15px 0"></div>
+    <form action="/brackets/<%= @bracket.id %>/delete" method="post">
+      <input id="hidden" type="hidden" name="_method" value="delete">
+      <input type="submit" class="button_md_red" value="Delete">
+    </form>
   </div>
 </div>

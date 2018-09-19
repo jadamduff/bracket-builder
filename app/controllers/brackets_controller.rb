@@ -11,81 +11,123 @@ class BracketsController < ApplicationController
   end
 
   post '/brackets' do
-    @bracket = Bracket.create(title: params[:bracket][:title], owner_id: current_user.id)
-    set_bracket(@bracket, params[:bracket][:teams])
-    redirect "/brackets/#{@bracket.id}"
+    if logged_in?
+      @bracket = Bracket.create(title: params[:bracket][:title], owner_id: current_user.id)
+      set_bracket(@bracket, params[:bracket][:teams])
+      redirect "/brackets/#{@bracket.id}"
+    else
+      redirect '/login'
+    end
   end
 
   get '/brackets/:id' do
-    @js = ["view_bracket.js.erb"]
-    @bracket = Bracket.find(params[:id])
-    @rounds = @bracket.rounds
-    @first_round = @bracket.rounds.first
-    @teams = @bracket.teams
-    erb :'/brackets/view'
+    if logged_in?
+      @js = ["view_bracket.js.erb"]
+      @bracket = Bracket.find(params[:id])
+      @rounds = @bracket.rounds
+      @first_round = @bracket.rounds.first
+      @teams = @bracket.teams
+      erb :'/brackets/view'
+    else
+      redirect '/login'
+    end
   end
 
   patch '/brackets/:id' do
-    @bracket = Bracket.find(params[:id])
-    params["bracket"]["rounds"].each_with_index do |round, round_index|
-      round[1]["games"].each_with_index do |game, game_index|
-        @update_game = @bracket.rounds[round_index].games[game_index]
-        @update_team1_id = nil
-        @update_team2_id = nil
-        @update_winner_id = nil
-        if !@bracket.teams.where("name = ?", game["team1"]).empty?
-          @update_team1_id = @bracket.teams.find_by(name: game["team1"]).id
+    if logged_in?
+      @bracket = Bracket.find(params[:id])
+      if current_user.id == @bracket.owner_id
+        params["bracket"]["rounds"].each_with_index do |round, round_index|
+          round[1]["games"].each_with_index do |game, game_index|
+            @update_game = @bracket.rounds[round_index].games[game_index]
+            @update_team1_id = nil
+            @update_team2_id = nil
+            @update_winner_id = nil
+            if !@bracket.teams.where("name = ?", game["team1"]).empty?
+              @update_team1_id = @bracket.teams.find_by(name: game["team1"]).id
+            end
+            if !@bracket.teams.where("name = ?", game["team2"]).empty?
+              @update_team2_id = @bracket.teams.find_by(name: game["team2"]).id
+            end
+            if !@bracket.teams.where("name = ?", game["winner"]).empty?
+              @update_winner_id = @bracket.teams.find_by(name: game["winner"]).id
+            end
+            @update_game.team1_id = @update_team1_id
+            @update_game.team2_id = @update_team2_id
+            @update_game.winner_id = @update_winner_id
+            @update_game.save
+          end
         end
-        if !@bracket.teams.where("name = ?", game["team2"]).empty?
-          @update_team2_id = @bracket.teams.find_by(name: game["team2"]).id
+        @championship = @bracket.rounds.last.games.first
+        if @championship.winner_id != nil
+          @team1_name = Team.find(@championship.team1_id).name
+          @team2_name = Team.find(@championship.team2_id).name
+          @bracket.champ_name = Team.find(@championship.winner_id).name
+          @bracket.save
+          if @bracket.champ_name == @team1_name
+            @bracket.runner_up_name = @team2_name
+          else
+            @bracket.runner_up_name = @team1_name
+          end
+          @bracket.save
         end
-        if !@bracket.teams.where("name = ?", game["winner"]).empty?
-          @update_winner_id = @bracket.teams.find_by(name: game["winner"]).id
-        end
-        @update_game.team1_id = @update_team1_id
-        @update_game.team2_id = @update_team2_id
-        @update_game.winner_id = @update_winner_id
-        @update_game.save
-      end
-    end
-    @championship = @bracket.rounds.last.games.first
-    if @championship.winner_id != nil
-      @team1_name = Team.find(@championship.team1_id).name
-      @team2_name = Team.find(@championship.team2_id).name
-      @bracket.champ_name = Team.find(@championship.winner_id).name
-      @bracket.save
-      if @bracket.champ_name == @team1_name
-        @bracket.runner_up_name = @team2_name
+        redirect "/brackets/#{@bracket.id}"
       else
-        @bracket.runner_up_name = @team1_name
+        redirect '/profile'
       end
-      @bracket.save
+    else
+      redirect '/login'
     end
-    redirect "/brackets/#{@bracket.id}"
   end
 
   get '/brackets/:id/edit' do
     if logged_in?
       @bracket = Bracket.find(params[:id])
-      @teams = @bracket.teams
-      @friends = current_user.friends
-      @js = ["new_bracket.js.erb"]
-      erb :'/brackets/edit'
+      if current_user.id == @bracket.owner_id
+        @teams = @bracket.teams
+        @friends = current_user.friends
+        @js = ["new_bracket.js.erb"]
+        erb :'/brackets/edit'
+      else
+        redirect '/profile'
+      end
     else
       redirect '/login'
     end
   end
 
   patch '/brackets/:id/edit' do
-    @bracket = Bracket.find(params[:id])
-    @bracket.rounds.delete_all
-    @bracket.rounds.each do |game|
-      round.games.delete_all
+    if logged_in?
+      @bracket = Bracket.find(params[:id])
+      if current_user.id == @bracket.owner_id
+        @bracket.rounds.delete_all
+        @bracket.rounds.each do |game|
+          round.games.delete_all
+        end
+        @bracket.teams.delete_all
+        @bracket.save
+        set_bracket(@bracket, params[:bracket][:teams])
+        redirect "/brackets/#{@bracket.id}"
+      else
+        redirect '/profile'
+      end
+    else
+      redirect '/login'
     end
-    @bracket.teams.delete_all
-    @bracket.save
-    set_bracket(@bracket, params[:bracket][:teams])
-    redirect "/brackets/#{@bracket.id}"
+  end
+
+  delete '/brackets/:id/delete' do
+    if logged_in?
+      @bracket = Bracket.find(params[:id])
+      if current_user.id == @bracket.owner_id
+        @bracket.delete
+        redirect '/profile'
+      else
+        redirect '/profile'
+      end
+    else
+      redirect '/login'
+    end
   end
 
   def set_bracket(bracket, teams)

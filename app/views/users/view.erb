@@ -23,14 +23,14 @@
         <div class="col_panel clearfix">
           <div style="display: block" class="clearfix">
             <div class="title clearfix">
-              <%= bracket.title %>
+              <a href="/brackets/<%= bracket.id %>" class="user_link"><%= bracket.title %></a>
             </div>
             <div class="created_at clearfix">
               Updated <%= time_ago_in_words(Time.now, bracket.updated_at) %> ago
             </div>
           </div>
           <div style="display: block">
-            <%= bracket.teams.count %> Teams | <% if bracket.champ_name != nil %>Finished<% else %>In Progress<% end %> | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> <% if bracket.champ_name != nil %><%= bracket.champ_name %><% else %>--<% end %>
+            <% if bracket.owner_id == current_user.id %><span class="owner">OWNER</span> | <% end %><%= bracket.teams.count %> Teams | <% if bracket.champ_name != nil %>Finished<% else %>In Progress<% end %> | <img src="/images/trophy_icon_gold4.png" style="height: 14px" /> <% if bracket.champ_name != nil %><% if !User.where("username = ?", bracket.champ_name).empty? %><a href="/users/<%= bracket.champ_name %>" class="user_link"><%= bracket.champ_name %></a><% else %><%= bracket.champ_name %><% end %><% else %>--<% end %>
           </div>
         </div>
       <% end %>
@@ -44,7 +44,7 @@
       <div class="col_panel tabbed" style="padding: 25px 40px">
         <% @friends.each do |friend| %>
           <div class="clearfix" style="line-height: 35px; vertical-align: middle; margin-bottom: 15px">
-            <%= friend.username %>
+            <a href="/users/<%= friend.username %>" class="user_link"><%= friend.username %></a>
           </div>
         <% end %>
       </div>

@@ -15,7 +15,7 @@
   </div>
 </div>
 <div class="bracket_window_container clearfix">
-  <div class="bracket_window">
+  <div class="bracket_window"<% if current_user.id != @bracket.owner_id %> style="bottom: 25px"<% end %>>
     <div class="bracket_container clearfix">
       <% @rounds.each do |round| %>
         <div class="bracket_round_col <%= 'championship' if round.number == @rounds.count %>" id="<%= round.number %>">
@@ -25,24 +25,37 @@
             <div class="bracket_game_box game_<%= @game_count %>">
               <div class="bracket_team_box team_<%= @team_count %>">
                 <% if game.team1_id != nil %>
-                  <%= Team.find(game.team1_id).name %><br />
+                  <% if !User.where("id = ?", Team.find(game.team1_id).user_id).empty? %>
+                    <a href="/users/<%= Team.find(game.team1_id).name %>" class="user_link"><%= Team.find(game.team1_id).name %></a><br />
+                  <% else %>
+                    <%= Team.find(game.team1_id).name %><br />
+                  <% end %>
                 <% end %>
               </div>
               <% @team_count += 1 %>
-              <div class="button_sm_skinny <% if game.winner_id == game.team1_id && game.winner_id != nil %>won<% else %>inactive<% end %>" style="margin-bottom: 10px" id="1">
-                Won
-              </div><br />
+              <% if @bracket.owner_id == current_user.id || (game.winner_id == game.team1_id && game.winner_id != nil) %>
+                <div class="button_sm_skinny <% if game.winner_id == game.team1_id && game.winner_id != nil %>won<% else %>inactive<% end %>" style="margin-bottom: 10px" id="1">
+                  Won
+                </div>
+              <% end %>
+                <br />
               <div class="bracket_team_box team_<%= @team_count %>">
                 <% if game.team2_id != nil %>
-                  <%= Team.find(game.team2_id).name %>
+                  <% if !User.where("id = ?", Team.find(game.team2_id).user_id).empty? %>
+                    <a href="/users/<%= Team.find(game.team2_id).name %>" class="user_link"><%= Team.find(game.team2_id).name %></a><br />
+                  <% else %>
+                    <%= Team.find(game.team2_id).name %><br />
+                  <% end %>
                 <% elsif round == @first_round%>
                   Bye
                 <% end %>
               </div>
               <% @team_count += 1 %>
-              <div class="button_sm_skinny <% if game.winner_id == game.team2_id && game.winner_id != nil %>won<% else %>inactive<% end %>" style="margin-bottom: 10px" id="2">
-                Won
-              </div>
+              <% if @bracket.owner_id == current_user.id  || (game.winner_id == game.team2_id && game.winner_id != nil) %>
+                <div class="button_sm_skinny <% if game.winner_id == game.team2_id && game.winner_id != nil %>won<% else %>inactive<% end %>" style="margin-bottom: 10px" id="2">
+                  Won
+                </div>
+              <% end %>
             </div>
             <% @game_count += 1 %>
           <% end %>
@@ -82,7 +95,9 @@
             <% end %>
           </div>
         <% end %>
-        <input type="submit" class="button_sm_skinny_yellow" value="Save">
+        <div>
+          <input type="submit" class="button_sm_skinny_yellow" value="Save" style="display: inline; margin-right: 10px"><a href="/brackets/<%= @bracket.id %>/edit"><div class="button_sm_skinny_edit" style="display: inline-block">Edit</div></a>
+        </div>
       </form>
     </div>
   <% end %>

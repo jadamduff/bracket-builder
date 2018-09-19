@@ -50,7 +50,7 @@ class UsersController < ApplicationController
     end
   end
 
-  get '/:username' do
+  get '/users/:username' do
     if logged_in?
       if current_user.username == params[:username]
         redirect '/profile'
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
             @silvers << bracket
           end
         end
-        
+
         erb :'users/view'
       end
     else
