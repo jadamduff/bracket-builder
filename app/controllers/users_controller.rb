@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   end
 
   post '/users' do
-    if User.find_by(username: params[:username]) == nil && User.find_by(email: params[:email]) == nil
+    if User.find_by(username: params[:username]) == nil && User.find_by(email: params[:email]) == nil && params[:username] != "" && params[:email] != "" && params[:password] != ""
       @user = User.new
       @user.username = params[:username]
       @user.email = params[:email]
@@ -45,6 +45,12 @@ class UsersController < ApplicationController
         flash[:message] = "That username is taken."
       elsif User.find_by(email: params[:email]) != nil
         flash[:message] = "That email is taken."
+      elsif params[:username] == ""
+        flash[:message] = "A username is required."
+      elsif params[:email] == ""
+        flash[:message] = "An email is required."
+      elsif params[:password] == ""
+        flash[:message] = "A password is required."
       end
       redirect '/'
     end
