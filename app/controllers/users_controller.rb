@@ -1,27 +1,24 @@
 class UsersController < ApplicationController
 
   get '/profile' do
-    if logged_in?
-      @user = current_user
-      @friend_requests = FriendRequest.where("pending_friend_id = ?", @user.id)
-      @friends = @user.friends
-      @brackets = @user.brackets.order(created_at: :desc)
-      @golds = []
-      @brackets.where("champ_name = ?", @user.username).each do |bracket|
-        if @user.brackets.include?(bracket)
-          @golds << bracket
-        end
+    redirect_if_not_logged_in
+    @user = current_user
+    @friend_requests = FriendRequest.where("pending_friend_id = ?", @user.id)
+    @friends = @user.friends
+    @brackets = @user.brackets.order(created_at: :desc)
+    @golds = []
+    @brackets.where("champ_name = ?", @user.username).each do |bracket|
+      if @user.brackets.include?(bracket)
+        @golds << bracket
       end
-      @silvers = []
-      @brackets.where("runner_up_name = ?", @user.username).each do |bracket|
-        if @user.brackets.include?(bracket)
-          @silvers << bracket
-        end
-      end
-      erb :'/users/profile'
-    else
-      redirect "/login"
     end
+    @silvers = []
+    @brackets.where("runner_up_name = ?", @user.username).each do |bracket|
+      if @user.brackets.include?(bracket)
+        @silvers << bracket
+      end
+    end
+    erb :'/users/profile'
   end
 
   post '/users' do

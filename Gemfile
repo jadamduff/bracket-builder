@@ -15,3 +15,4 @@ gem 'shotgun'
 gem 'bcrypt', '~> 3.1.7'
 gem 'tux'
 gem 'rack-flash3'
+gem "rack", ">= 2.0.6"
